@@ -9,17 +9,20 @@ export default require;
 
 dotenv.config();
 
-// const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
+
+// const swaggerSpec = require('./swagger');
 
 // app.use(require('./controllers/userController'))
 
 app.get("/",function(request,response){
   response.send("Hello World!")
 })
-
 app.use(express.json());
 
 const db = mysql.createConnection({
@@ -40,6 +43,32 @@ db.connect((err) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'My API',
+      version: '1.0.0',
+      description: 'A sample API for learning Swagger',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'],
+};
+// Serve Swagger documentation
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
+// Your API routes go here
+
+
+
+
 
 
 
