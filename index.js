@@ -63,20 +63,31 @@ app.get('/users/:id', (req, res) => {
 
 // Create a new user
 app.post('/users', (req, res) => {
-  const { name, email } = req.body;
-  db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email], (err, result) => {
+  const { email, password, first_name, last_name } = req.body;
+  db.query('INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)', [email, password, first_name, last_name], (err, result) => {
     if (err) throw err;
-    res.json({ message: 'User added successfully', id: result.insertId });
+    // res.json({ message: 'User added successfully', id: result.insertId });
+    db.query('SELECT * FROM users WHERE id = ?', [result.insertId], (err, results) => {
+      if (err) throw err;
+      res.json(results[0]);
+    });
   });
 });
 
 // Update a user
 app.put('/users/:id', (req, res) => {
   const { id } = req.params;
-  const { name, email } = req.body;
-  db.query('UPDATE users SET name = ?, email = ? WHERE id = ?', [name, email, id], (err) => {
+  const { email, password, first_name, last_name } = req.body;
+  console.warn('Check--request ->', req);
+  console.warn('Check--body params->', req.body);
+  db.query(
+    'UPDATE users SET email= ?, password= ?, first_name= ?, last_name= ? WHERE id= ?', [email, password, first_name, last_name, id], (err) => {
     if (err) throw err;
-    res.json({ message: 'User updated successfully' });
+    db.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
+      if (err) throw err;
+      res.json(results[0]);
+    });
+    // res.json({ message: 'User updated successfully' });
   });
 });
 
