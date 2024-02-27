@@ -1,13 +1,20 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+
+export default require;
+
 dotenv.config();
 
-const express = require('express');
+// const express = require('express');
 const mysql = require('mysql2');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// app.use(require('./controllers/userController'))
 
 app.get("/",function(request,response){
   response.send("Hello World!")
@@ -15,11 +22,10 @@ app.get("/",function(request,response){
 
 app.use(express.json());
 
-
 const db = mysql.createConnection({
-  host: 'localhost:3606',
+  host: 'localhost',
   user: 'root',
-  password: 'password',
+  password: 'root',
   database: 'node_rest_api_development',
 });
 
