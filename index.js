@@ -4,16 +4,17 @@ const require = createRequire(import.meta.url);
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import swaggerUi from 'swagger-ui-express';
 
 export default require;
-
+import { apiDocumentation } from './docs/apidoc.js'
 dotenv.config();
 
 const mysql = require('mysql2');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const swaggerUI = require('swagger-ui-express');
+// const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 
 // const swaggerSpec = require('./swagger');
@@ -54,15 +55,16 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:3000/',
       },
     ],
   },
   apis: ['./routes/*.js'],
 };
 // Serve Swagger documentation
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+// const swaggerDocs = swaggerJsDoc(swaggerOptions);
+// app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(apiDocumentation));
 
 // Your API routes go here
 
