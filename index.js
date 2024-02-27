@@ -65,6 +65,7 @@ app.get('/users/:id', (req, res) => {
 app.post('/users', (req, res) => {
   const { email, password, first_name, last_name } = req.body;
   db.query('INSERT INTO users (email, password, first_name, last_name) VALUES (?, ?, ?, ?)', [email, password, first_name, last_name], (err, result) => {
+    // db.query('INSERT INTO users (email, password, first_name, last_name) VALUES (req.body.email, req.body.password, req.body.first_name, req.body.last_name)', (err, result) => {
     if (err) throw err;
     // res.json({ message: 'User added successfully', id: result.insertId });
     db.query('SELECT * FROM users WHERE id = ?', [result.insertId], (err, results) => {
