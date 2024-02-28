@@ -14,10 +14,7 @@ const mysql = require('mysql2');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
-
-// const swaggerSpec = require('./swagger');
 
 // app.use(require('./controllers/userController'))
 
@@ -26,19 +23,39 @@ app.get("/",function(request,response){
 })
 app.use(express.json());
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'node_rest_api_development',
-});
+// mysql connection - with default query base------------
+// const db = mysql.createConnection({
+  //   host: 'localhost',
+  //   user: 'root',
+  //   password: 'root',
+  //   database: 'node_rest_api_development',
+  // });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-    return;
+// db.connect((err) => {
+//   if (err) {
+  //     console.error('Error connecting to MySQL:', err);
+  //     return;
+  //   }
+  //   console.log('Connected to MySQL database');
+  // });
+
+// mysql connection - with ORM------------
+const Sequelize = require("sequelize");
+
+const sequelize = new Sequelize(
+ 'node_rest_api_development',
+ 'root',
+ 'root',
+  {
+    host: 'localhost',
+    dialect: 'mysql'
   }
-  console.log('Connected to MySQL database');
+);
+
+sequelize.authenticate().then(() => {
+  console.log('Connection has been established successfully.');
+}).catch((error) => {
+  console.error('Unable to connect to the database: ', error);
 });
 
 app.listen(PORT, () => {
@@ -61,18 +78,8 @@ const swaggerOptions = {
   },
   apis: ['./routes/*.js'],
 };
-// Serve Swagger documentation
-// const swaggerDocs = swaggerJsDoc(swaggerOptions);
-// app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(apiDocumentation));
-
-// Your API routes go here
-
-
-
-
-
-
 
 // ---------------------------------
 // Get all users
