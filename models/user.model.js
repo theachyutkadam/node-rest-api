@@ -19,28 +19,16 @@ sequelize.authenticate().then(() => {
 });
 
 
-const Player = sequelize.define("players", {
-  first_name: {
+const User = sequelize.define("users", {
+  email: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  last_name: {
+  password: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  contact: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  birth_date: {
-    type: DataTypes.DATEONLY,
-  },
-  gender: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1
-  },
-  speciality: {
+  status: {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 1
@@ -48,8 +36,8 @@ const Player = sequelize.define("players", {
 });
 
 sequelize.sync().then(() => {
-  console.log('Player table created successfully!');
-  return Player
+  console.log('User table created successfully!');
+  return User
 }).catch((error) => {
   console.error('Unable to create table : ', error);
 });
